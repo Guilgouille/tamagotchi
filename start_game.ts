@@ -102,6 +102,7 @@ if(localStorage.getItem("boolGros") == null){
 }
 
 let boolSavon : boolean = false;
+let boolMort : boolean = false
 
 
 //Création des différents crons
@@ -189,6 +190,18 @@ const jobGros = new Cron('*/1 * * * * *', () => {
     localStorage.setItem("secondesTama", String(secondes))
 
     localStorage.setItem("boolGros", String(boolGros));
+
+    if(jaugeFaim.valeur == 0){
+        boolMort = true
+    } else if(jaugeHygiene.valeur == 0) {
+        boolMort = true
+    } else if(jaugeMental.valeur == 0) {
+        boolMort = true
+    } else if(jaugeSommeil.valeur == 0) {
+        boolMort = true
+    } else if(jaugeVie.valeur == 0) {
+        boolMort = true
+    }
 })
 
 const jobTel = new Cron('*/5 * * * * *', () => {
