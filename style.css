@@ -122,9 +122,10 @@
   }
 
   .health-bar {
-    height: 16px;
-    width: 300px;
-    background: black;
+      height: 16px;
+      width: 300px;
+      background-color: black;
+      overflow: hidden;
   }
 
   .heart-icon {
@@ -284,7 +285,7 @@
 
 .tama.Mandale {
   --frames: 13;
-  background-image: url("assets/Hit/Mandale-14.png");
+  background-image: url("assets/Hit/Mandale-13.png");
   animation: sprite-anim 1.3s steps(13) infinite;
 }
 
@@ -326,4 +327,10 @@
 .tama.MouthOpen {
   --frames: 1;
   background-image: url("assets/Eat/Mouth-opened-1.png");
+}
+
+.tama.Death {
+  --frames: 21;
+  background-image: url("assets/death-21.png");
+  animation: sprite-anim 2.1s steps(21) infinite;
 }
