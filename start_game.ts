@@ -3,6 +3,28 @@ import { Jauge, JaugeHP } from "./Jauge.ts";
 import { Cron } from "croner";
 import { getRandomInt } from "./fonctions_pratiques.ts";
 
+//Création du nom du tama
+let nomTamaghorrible : string;
+if(localStorage.getItem("nomTamaghorrible") == null) {
+    nomTamaghorrible = ""
+} else {
+    nomTamaghorrible = String(localStorage.getItem("nomTamaghorrible"));
+}
+//Récupération/création du timer
+let minutes : number;
+if(localStorage.getItem("minutesTama") == null){
+    minutes = 0
+} else {
+    minutes = Number(localStorage.getItem("minutesTama"))
+}
+
+let secondes : number;
+if(localStorage.getItem("secondesTama") == null){
+    secondes = 0
+} else {
+    secondes = Number(localStorage.getItem("secondesTama"))
+}
+
 //Création des différentes jauges
 //Jauge de vie
 let jaugeVie : JaugeHP;
@@ -114,6 +136,11 @@ const jobHygieneMental = new Cron('*/60 * * * * *', () => {
     } else {
         jaugeMental.addToValue(-1)
     }
+
+    //Mise à jour timer minutes
+    minutes ++
+    localStorage.setItem("minutesTama", String(minutes))
+
     localStorage.setItem("jaugeHygiene", String(jaugeHygiene.valeur));
     localStorage.setItem("jaugeMental", String(jaugeMental.valeur));
 })
@@ -156,6 +183,11 @@ const jobGros = new Cron('*/1 * * * * *', () => {
     if(jaugeFaim.valeur <= 10 && boolGros) {
         boolGros = false;
     }
+
+    //Mise à jour timer secondes
+    secondes ++
+    localStorage.setItem("secondesTama", String(secondes))
+
     localStorage.setItem("boolGros", String(boolGros));
 })
 
