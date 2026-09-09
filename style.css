@@ -1,6 +1,7 @@
 * {
     image-rendering: pixelated;
     font-family: "GrapeSoda", sans-serif;
+    box-sizing: border-box;
 }
 
 @font-face {
@@ -10,16 +11,115 @@
     font-style: normal;
 }
 
-.timename {
+.tama {
+    --frame-w: 32px;
+    --frame-h: 32px;
+    --frames: 19;
+    --scale: 8;
+
+    background-image: url("assets/idle/idle-tama-19.png");
+    background-repeat: no-repeat;
+    background-size: calc(var(--frame-w) * var(--frames) * var(--scale)) calc(var(--frame-h) * var(--scale));
+    display: inline-block;
+    width: calc(var(--frame-w) * var(--scale));
+    height: calc(var(--frame-h) * var(--scale));
+    animation: sprite-anim 1.9s steps(19) infinite;
+}
+
+@keyframes sprite-anim {
+    to { background-position-x: calc(-1 * var(--frame-w) * var(--frames) * var(--scale)); }
+}
+
+@media (max-width: 600px) {
+    .timename {
     display: flex;
     flex-direction: row;
     gap: 10px;
     font-size: 20px;
 }
 
+
+
+.info {
+    width: 100%;
+}
+
 .health {
     display: flex;
     flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+.health-bar {
+    height: 12px;
+    background-color: black;
+    width: 40%;
+}
+
+.heart-icon {
+width: 20px;
+height: 20px;    
+}
+
+.game {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 70%;
+    width: 100%;
+
+}
+
+.invbar {
+    display: flex;
+    width: 80%;
+    height: 50%;
+    padding: 14px 11px;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 17px;
+    }
+
+.border-inv {
+    display: flex;
+    width: 73px;
+    height: 73px;
+
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+
+    background: url("assets/icon.png");
+    background-size: cover;
+}
+
+.invpic {
+    width: 50px;
+    height: 50px;
+}
+
+.tama { --scale: 8;
+ 
+margin-top: 25%;
+margin-bottom: 25%; }
+
+}
+
+@media (min-width: 600px) {
+
+.timename {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    font-size: 30px;
+}
+
+.health {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     gap: 10px;
 }
 
@@ -29,11 +129,17 @@
     width: 300px;
 }
 
+.heart-icon {
+width: 24px;
+height: 24px;    
+}
+
 .game {
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 60%;
+    max-height: 100%;
+    height: 80%;
     width: 100%;
 
 }
@@ -41,10 +147,10 @@
 .invbar {
     display: flex;
     width: 647px;
-    height: 118px;
+    height: 400px;
     padding: 14px 11px;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center;
     gap: 17px;
     }
 
@@ -60,24 +166,8 @@
     background: url("assets/icon.png");
     background-size: cover;
 }
-
-.tama {
-    background-image: url("assets/Sleep-idle.png");
-    background-repeat: no-repeat;
-    display: inline-block;
-    width: 32px;
-    height: 32px;
-    animation: sleep-idle 10.8s steps(108) infinite; /* l'image fait 108 frame donc 0.100ms x Frame = s */
-    transform: scale(8);
-    margin: 224px;
+.tama { --scale: 10;
 }
 
-@keyframes sleep-idle {
-    from {
-        background-position-x: 0;
-    }
 
-    to {
-        background-position-x: -3456px; /*Taille de l'image en largeur */
-    }
-}
+
