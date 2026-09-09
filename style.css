@@ -1,61 +1,59 @@
 * {
-    image-rendering: pixelated;
-    font-family: "GrapeSoda", sans-serif;
-    box-sizing: border-box;
+  image-rendering: pixelated;
+  font-family: "GrapeSoda", sans-serif;
+  box-sizing: border-box;
 }
 
 @font-face {
-    font-family: "GrapeSoda";
-    src: url("assets/font/GrapeSoda.ttf") format("truetype");
-    font-weight: normal;
-    font-style: normal;
+  font-family: "GrapeSoda";
+  src: url("assets/font/GrapeSoda.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
 }
 
 @media (max-width: 600px) {
+  .timename {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    font-size: 20px;
+  }
 
-.timename {
-display: flex;
-flex-direction: row;
-gap: 10px;
-font-size: 20px;
-}
-
-.timename p {
+  .timename p {
     margin: 0px;
-}
+  }
 
-.info {
+  .info {
     width: 100%;
-}
+  }
 
-.health {
+  .health {
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 10px;
-}
+  }
 
-.health-bar {
+  .health-bar {
     height: 12px;
     background-color: black;
     width: 40%;
-}
+  }
 
-.heart-icon {
-width: 20px;
-height: 20px;    
-}
+  .heart-icon {
+    width: 20px;
+    height: 20px;
+  }
 
-.game {
+  .game {
     display: flex;
     flex-direction: column;
     align-items: center;
     height: 70%;
     width: 100%;
+  }
 
-}
-
-.invbar {
+  .invbar {
     list-style: none;
     margin: 0;
     display: flex;
@@ -66,9 +64,9 @@ height: 20px;
     justify-content: center;
     align-items: flex-start;
     gap: 17px;
-}
+  }
 
-.invbar button {
+  .invbar button {
     all: unset;
     cursor: pointer;
     display: flex;
@@ -76,9 +74,9 @@ height: 20px;
     align-items: center;
     width: 100%;
     height: 100%;
-}
+  }
 
-.border-inv {
+  .border-inv {
     display: flex;
     width: 73px;
     height: 73px;
@@ -89,62 +87,61 @@ height: 20px;
 
     background: url("assets/icon.png");
     background-size: cover;
-}
+  }
 
-.invpic {
+  .invpic {
     width: 50px;
     height: 50px;
-}
+  }
 
-.tama { --scale: 8;
- 
-margin-top: 25%;
-margin-bottom: 25%; }
+  .tama {
+    --scale: 10;
 
+    margin-top: 25%;
+    margin-bottom: 25%;
+  }
 }
 
 @media (min-width: 600px) {
-
-.timename {
+  .timename {
     display: flex;
     flex-direction: row;
     gap: 10px;
     font-size: 30px;
-}
+  }
 
-.timename p {
+  .timename p {
     margin: 0px;
-}
+  }
 
-.health {
+  .health {
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 10px;
-}
+  }
 
-.health-bar {
+  .health-bar {
     height: 16px;
     width: 300px;
     background: black;
-}
+  }
 
-.heart-icon {
-width: 24px;
-height: 24px;    
-}
+  .heart-icon {
+    width: 24px;
+    height: 24px;
+  }
 
-.game {
+  .game {
     display: flex;
     flex-direction: column;
     align-items: center;
     max-height: 100%;
     height: 80%;
     width: 100%;
+  }
 
-}
-
-.invbar {
+  .invbar {
     display: flex;
     width: 647px;
     height: 400px;
@@ -152,9 +149,9 @@ height: 24px;
     justify-content: center;
     align-items: center;
     gap: 17px;
-    }
+  }
 
-.invbar button {
+  .invbar button {
     all: unset;
     cursor: pointer;
     display: flex;
@@ -162,9 +159,9 @@ height: 24px;
     align-items: center;
     width: 100%;
     height: 100%;
-}
+  }
 
-.border-inv {
+  .border-inv {
     display: flex;
     width: 90px;
     height: 90px;
@@ -175,154 +172,158 @@ height: 24px;
 
     background: url("assets/icon.png");
     background-size: cover;
+  }
+  .tama {
+    --scale: 12;
+  }
 }
-.tama { --scale: 10;
-}
-}
-
 
 @keyframes sprite-anim {
-    to { background-position-x: calc(-1 * var(--frame-w) * var(--frames) * var(--scale)); }
+  to {
+    background-position-x: calc(
+      -1 * var(--frame-w) * var(--frames) * var(--scale)
+    );
+  }
 }
 
 .tama {
-    --frame-w: 32px;
-    --frame-h: 32px;
-    --scale: 8;
+  --frame-w: 32px;
+  --frame-h: 32px;
 
-    background-repeat: no-repeat;
-    background-size: calc(var(--frame-w) * var(--frames) * var(--scale)) calc(var(--frame-h) * var(--scale));
-    display: inline-block;
-    width: calc(var(--frame-w) * var(--scale));
-    height: calc(var(--frame-h) * var(--scale));
+  background-repeat: no-repeat;
+  background-size: calc(var(--frame-w) * var(--frames) * var(--scale))
+    calc(var(--frame-h) * var(--scale));
+  display: inline-block;
+  width: calc(var(--frame-w) * var(--scale));
+  height: calc(var(--frame-h) * var(--scale));
 }
 
 /* TOUTE LES ANIMS DE TAMA */
 
 .tama.Idle {
-    --frames: 19;
-    background-image: url("assets/idle/idle-tama-19.png");
-    animation: sprite-anim 1.9s steps(19) infinite;
+  --frames: 19;
+  background-image: url("assets/idle/idle-tama-19.png");
+  animation: sprite-anim 1.9s steps(19) infinite;
 }
 
 .tama.sleepIdle {
-    --frames: 108;
-    background-image: url("assets/Sleep/Sleep-idle-108.png");
-    animation: sprite-anim 10.8s steps(108) infinite;
+  --frames: 108;
+  background-image: url("assets/Sleep/Sleep-idle-108.png");
+  animation: sprite-anim 10.8s steps(108) infinite;
 }
 
 .tama.SleepPhone {
-    --frames: 26;
-    background-image: url("assets/Sleep/Sleepy-phone-26.png");
-    animation: sprite-anim 2.6s steps(26) infinite;
+  --frames: 26;
+  background-image: url("assets/Sleep/Sleepy-phone-26.png");
+  animation: sprite-anim 2.6s steps(26) infinite;
 }
 
 .tama.Sick {
-    --frames: 74;
-    background-image: url("assets/Sick/sick-anim-74.png");
-    animation: sprite-anim 7.4s steps(74) infinite;
+  --frames: 74;
+  background-image: url("assets/Sick/sick-anim-74.png");
+  animation: sprite-anim 7.4s steps(74) infinite;
 }
 
 .tama.OnPhone {
-    --frames: 26;
-    background-image: url("assets/Phone/On-phone-26.png");
-    animation: sprite-anim 2.6s steps(26) infinite;
+  --frames: 26;
+  background-image: url("assets/Phone/On-phone-26.png");
+  animation: sprite-anim 2.6s steps(26) infinite;
 }
 
 .tama.OnPhoneDirty {
-    --frames: 26;
-    background-image: url("assets/Phone/On-phone-dirty-26.png");
-    animation: sprite-anim 2.6s steps(26) infinite;
+  --frames: 26;
+  background-image: url("assets/Phone/On-phone-dirty-26.png");
+  animation: sprite-anim 2.6s steps(26) infinite;
 }
 
 .tama.FatIdle {
-    --frames: 32;
-    background-image: url("assets/idle/idle-fat-tama2-32.png");
-    animation: sprite-anim 3.2s steps(32) infinite;
+  --frames: 32;
+  background-image: url("assets/idle/idle-fat-tama2-32.png");
+  animation: sprite-anim 3.2s steps(32) infinite;
 }
 
 .tama.FatSick {
-    --frames: 48;
-    background-image: url("assets/Obese/fat-tama2-sick-48.png");
-    animation: sprite-anim 4.8s steps(48) infinite;
+  --frames: 48;
+  background-image: url("assets/Obese/fat-tama2-sick-48.png");
+  animation: sprite-anim 4.8s steps(48) infinite;
 }
 
 .tama.FatEat {
-    --frames: 6;
-    background-image: url("assets/Obese/fat-tama2-eat-6.png");
-    animation: sprite-anim 0.6s steps(6) infinite;
+  --frames: 6;
+  background-image: url("assets/Obese/fat-tama2-eat-6.png");
+  animation: sprite-anim 0.6s steps(6) infinite;
 }
 
 .tama.FatPhone {
-    --frames: 31;
-    background-image: url("assets/Phone/fat-tama2-phone-31.png");
-    animation: sprite-anim 3.1s steps(31) infinite;
+  --frames: 31;
+  background-image: url("assets/Phone/fat-tama2-phone-31.png");
+  animation: sprite-anim 3.1s steps(31) infinite;
 }
 
 .tama.FatMouthOpen {
-    --frames: 1;
-    background-image: url("assets/Obese/fat-tama2-mouth-opened-1.png");
+  --frames: 1;
+  background-image: url("assets/Obese/fat-tama2-mouth-opened-1.png");
 }
 
 .tama.FatMad {
-    --frames: 36;
-    background-image: url("assets/Obese/fat-tama2-mad-36.png");
-    animation: sprite-anim 3.6s steps(36) infinite;
+  --frames: 36;
+  background-image: url("assets/Obese/fat-tama2-mad-36.png");
+  animation: sprite-anim 3.6s steps(36) infinite;
 }
 
 .tama.FatDirty {
-    --frames: 32;
-    background-image: url("assets/Obese/fat-tama-dirty-32.png");
-    animation: sprite-anim 3.2s steps(32) infinite;
+  --frames: 32;
+  background-image: url("assets/Obese/fat-tama-dirty-32.png");
+  animation: sprite-anim 3.2s steps(32) infinite;
 }
 
 .tama.FatDirtyMouthOpen {
-    --frames: 1;
-    background-image: url("assets/Obese/fat-tama2-dirty-mouth-opened-1.png");
+  --frames: 1;
+  background-image: url("assets/Obese/fat-tama2-dirty-mouth-opened-1.png");
 }
 
 .tama.Mandale {
-    --frames: 13;
-    background-image: url("assets/Hit/Mandale-14.png");
-    animation: sprite-anim 1.3s steps(13) infinite;
+  --frames: 13;
+  background-image: url("assets/Hit/Mandale-14.png");
+  animation: sprite-anim 1.3s steps(13) infinite;
 }
 
 .tama.Mad {
-    --frames: 6;
-    background-image: url("assets/Mad/mad-tama-6.png");
-    animation: sprite-anim 0.6s steps(6) infinite;
+  --frames: 6;
+  background-image: url("assets/Mad/mad-tama-6.png");
+  animation: sprite-anim 0.6s steps(6) infinite;
 }
 
 .tama.Betise {
-    --frames: 25;
-    background-image: url("assets/bétise/betise-25.png");
-    animation: sprite-anim 2.5s steps(25) infinite;
+  --frames: 25;
+  background-image: url("assets/bétise/betise-25.png");
+  animation: sprite-anim 2.5s steps(25) infinite;
 }
 
 .tama.DirtyIdle {
-    --frames: 7;
-    background-image: url("assets/Dirty/dirty-idle-7.png");
-    animation: sprite-anim 0.7s steps(7) infinite;
+  --frames: 7;
+  background-image: url("assets/Dirty/dirty-idle-7.png");
+  animation: sprite-anim 0.7s steps(7) infinite;
 }
 
 .tama.EatDirty {
-    --frames: 6;
-    background-image: url("assets/Dirty/eat-dirty-6.png");
-    animation: sprite-anim 0.6s steps(6) infinite;
+  --frames: 6;
+  background-image: url("assets/Dirty/eat-dirty-6.png");
+  animation: sprite-anim 0.6s steps(6) infinite;
 }
 
 .tama.MouthOpenDirty {
-    --frames: 1;
-    background-image: url("assets/Dirty/opened-mouth-dirty-1.png");
+  --frames: 1;
+  background-image: url("assets/Dirty/opened-mouth-dirty-1.png");
 }
 
 .tama.Eat {
-    --frames: 6;
-    background-image: url("assets/Eat/eat-6.png");
-    animation: sprite-anim 0.6s steps(6) infinite;
+  --frames: 6;
+  background-image: url("assets/Eat/eat-6.png");
+  animation: sprite-anim 0.6s steps(6) infinite;
 }
 
 .tama.MouthOpen {
-    --frames: 1;
-    background-image: url("assets/Eat/Mouth-opened-1.png");
+  --frames: 1;
+  background-image: url("assets/Eat/Mouth-opened-1.png");
 }
