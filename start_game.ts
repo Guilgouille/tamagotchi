@@ -1,11 +1,11 @@
 //Imports
-import { Jauge } from "./Jauge.ts";
+import { Jauge, JaugeHP } from "./Jauge.ts";
 import { Cron } from "croner";
 import { getRandomInt } from "./fonctions_pratiques.ts";
 
 //Création des différentes jauges
 //Jauge de vie
-let jaugeVie : Jauge;
+let jaugeVie : JaugeHP;
 if(localStorage.getItem("jaugeVie") == null) {
     jaugeVie = new Jauge("Vie", 10);
 } else {
@@ -79,30 +79,43 @@ if(localStorage.getItem("boolGros") == null){
     boolGros = localStorage.getItem("boolGros") === "true";
 }
 
+let boolSavon : boolean = false;
+
 
 //Création des différents crons
 const jobFaim = new Cron('*/30 * * * * *', () => {
 	jaugeFaim.addToValue(-1);
+    localStorage.setItem("jaugeFaim", String(jaugeFaim.valeur));
 });
 
 const jobSommeil = new Cron('*/40 * * * * *', () => {
     if(boolJour || (boolTel && !boolJour)){
         jaugeSommeil.addToValue(-1);
     }
+    localStorage.setItem("jaugeSommeil", String(jaugeSommeil.valeur))
 })
 
 const jobDodo = new Cron('*/10 * * * * *', () => {
     if(!boolJour && !boolTel){
         jaugeSommeil.addToValue(1);
     }
+    localStorage.setItem("jaugeSommeil", String(jaugeSommeil.valeur))
 })
 
-const jobHygiene = new Cron('*/60 * * * * *', () => {
+const jobHygieneMental = new Cron('*/60 * * * * *', () => {
     if(boolGros) {
         jaugeHygiene.addToValue(-2);
     } else {
         jaugeHygiene.addToValue(-1);
     }
+
+    if(jaugeSommeil.valeur <= 4) {
+        jaugeMental.addToValue(-2)
+    } else {
+        jaugeMental.addToValue(-1)
+    }
+    localStorage.setItem("jaugeHygiene", String(jaugeHygiene.valeur));
+    localStorage.setItem("jaugeMental", String(jaugeMental.valeur));
 })
 
 const jobHP = new Cron('*/20 * * * * *', () => {
@@ -113,12 +126,13 @@ const jobHP = new Cron('*/20 * * * * *', () => {
             jaugeVie.addToValue(-1);
         }
     }
+    localStorage.setItem("jaugeVie", String(jaugeVie.valeur))
 })
 
 const jobConditionsSpéciales = new Cron('*/20 * * * * *', () => {
     let roueDeLaChance : number = getRandomInt(1, 10);
     if(jaugeHygiene.valeur <= 4) {
-        if(roueDeLaChance <= 2) {
+        if(roueDeLaChance <= 5) {
             boolMalade = true;
         } 
     } else if(boolGros) {
@@ -134,10 +148,87 @@ const jobConditionsSpéciales = new Cron('*/20 * * * * *', () => {
             }
         }
     }
+    localStorage.setItem("boolMalade", String(boolMalade));
+    localStorage.setItem("boolGros", String(boolGros));
 })
 
 const jobGros = new Cron('*/1 * * * * *', () => {
     if(jaugeFaim.valeur <= 10 && boolGros) {
         boolGros = false;
     }
+    localStorage.setItem("boolGros", String(boolGros));
 })
+
+const jobTel = new Cron('*/5 * * * * *', () => {
+    if(boolTel){
+        jaugeMental.addToValue(1)
+    }
+    localStorage.setItem("jaugeMental", String(jaugeMental.valeur));
+})
+
+
+//Fonctions d'interaction avec le tamaghorrible
+//Interaction de nourriture
+function donnerSalade(){
+    jaugeFaim.addToValue(2);
+    jaugeVie.addToValue(1);
+    jaugeMental.addToValue(-1);
+
+    localStorage.setItem("jaugeFaim", String(jaugeFaim.valeur));
+    localStorage.setItem("jaugeVie", String(jaugeVie.valeur));
+    localStorage.setItem("jaugeMental", String(jaugeMental.valeur));
+}
+
+function donnerFugu(){
+    jaugeFaim.addToValue(4);
+    if(getRandomInt(1, 5) == 1){
+        boolMalade = true;
+    }
+
+    localStorage.setItem("jaugeFaim", String(jaugeFaim.valeur));
+    localStorage.setItem("boolMalade", String(boolMalade));
+}
+
+function donnerTacos(){
+    jaugeFaim.addToValue(6);
+    jaugeMental.addToValue(1);
+    jaugeHygiene.addToValue(-2);
+
+    localStorage.setItem("jaugeFaim", String(jaugeFaim.valeur));
+    localStorage.setItem("jaugeMental", String(jaugeMental.valeur));
+    localStorage.setItem("jaugeHygiene", String(jaugeHygiene.valeur));
+}
+
+//Interactions du téléphone
+function donnerTel(){
+    boolTel = true
+    localStorage.setItem("boolTel", String(boolTel));
+}
+
+function prendreTel(){
+    boolTel = false;
+    localStorage.setItem("boolTel", String(boolTel));
+}
+
+//Autres interactions
+function donnerDoliprane() {
+    if(boolMalade) {
+        jaugeVie.addToValue(3)
+        boolMalade = false
+    } else {
+        jaugeVie.addToValue(-3)
+    }
+    jaugeMental.addToValue(-3)
+
+    localStorage.setItem("jaugeVie", String(jaugeVie.valeur))
+    localStorage.setItem("jaugeMental", String(jaugeMental.valeur))
+    localStorage.setItem("boolMalade", String(boolMalade))
+}
+
+function donnerMendale() {
+    boolConnerie = false
+    jaugeVie.addToValue(-1)
+
+    localStorage.setItem("boolConnerie", String(boolConnerie))
+    localStorage.setItem("jaugeVie", String(jaugeVie.valeur))
+}

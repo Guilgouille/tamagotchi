@@ -1,3 +1,5 @@
+
+
 //Définition du type d'objet "Jauge"
 export class Jauge {
     nom : string;
@@ -8,12 +10,25 @@ export class Jauge {
         this.valeur = valeur;
     }
 
-    //Methode d'update de la valeur de la jauge
-    setValeur(newValeur : number){
-        this.valeur = newValeur;
+    addToValue(num : number) {
+        if(this.valeur + num <= 10){
+            this.valeur += num;
+        } else {
+            this.valeur = 10;
+        }
+    }
+}
+
+//Cas particulier de la jauge de vie
+export class JaugeHP {
+    nom : string;
+    valeur : number;
+
+    constructor(nom : string, valeur : number){
+        this.nom = nom;
+        this.valeur = valeur;
     }
 
-    //une methode pour soustraire la jauge de 1 (pour les cron)
     addToValue(num : number) {
         this.valeur += num;
     }
