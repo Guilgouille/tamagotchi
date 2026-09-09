@@ -213,6 +213,21 @@ function gamestart() {
         }
         localStorage.setItem("jaugeMental", String(jaugeMental.valeur));
     });
+
+    function MiseAJourAffichage() {
+    var clock = document.getElementById("clock");
+    var nameDisplay = document.getElementById("tama-display-name");
+
+    var secAffichees = secondes % 60;
+    var minAffichees = String(minutes).padStart(2, "0");
+    var secStr = String(secAffichees).padStart(2, "0");
+
+    clock.textContent = minAffichees + ":" + secStr;
+    nameDisplay.textContent = nomTamaghorrible;
+    }
+
+    setInterval(MiseAJourAffichage, 1000);
+
 }
 //Fonctions d'interaction avec le tamaghorrible
 //Interaction de nourriture
