@@ -1,6 +1,7 @@
 //Imports
 import { Jauge } from "./Jauge.ts";
 import { Cron } from "croner";
+import { getRandomInt } from "./fonctions_pratiques.ts";
 
 //Création des différentes jauges
 //Jauge de vie
@@ -101,5 +102,42 @@ const jobHygiene = new Cron('*/60 * * * * *', () => {
         jaugeHygiene.addToValue(-2);
     } else {
         jaugeHygiene.addToValue(-1);
+    }
+})
+
+const jobHP = new Cron('*/20 * * * * *', () => {
+    if(boolConnerie || boolMalade){
+        if(boolConnerie && boolMalade){
+            jaugeVie.addToValue(-2);
+        } else {
+            jaugeVie.addToValue(-1);
+        }
+    }
+})
+
+const jobConditionsSpéciales = new Cron('*/20 * * * * *', () => {
+    let roueDeLaChance : number = getRandomInt(1, 10);
+    if(jaugeHygiene.valeur <= 4) {
+        if(roueDeLaChance <= 2) {
+            boolMalade = true;
+        } 
+    } else if(boolGros) {
+        if(roueDeLaChance == 1) {
+            boolMalade == true;
+        }
+    } else {
+        if(roueDeLaChance == 1) {
+            if(getRandomInt(0, 1) == 0) {
+                boolMalade = true
+            } else {
+                boolConnerie = true
+            }
+        }
+    }
+})
+
+const jobGros = new Cron('*/1 * * * * *', () => {
+    if(jaugeFaim.valeur <= 10 && boolGros) {
+        boolGros = false;
     }
 })
