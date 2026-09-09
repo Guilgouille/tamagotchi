@@ -104,113 +104,113 @@ if(localStorage.getItem("boolGros") == null){
 let boolSavon : boolean = false;
 let boolMort : boolean = false
 
+function gamestart() {
+    //Création des différents crons
+    const jobFaim = new Cron('*/30 * * * * *', () => {
+        jaugeFaim.addToValue(-1);
+        localStorage.setItem("jaugeFaim", String(jaugeFaim.valeur));
+    });
 
-//Création des différents crons
-const jobFaim = new Cron('*/30 * * * * *', () => {
-	jaugeFaim.addToValue(-1);
-    localStorage.setItem("jaugeFaim", String(jaugeFaim.valeur));
-});
+    const jobSommeil = new Cron('*/40 * * * * *', () => {
+        if(boolJour || (boolTel && !boolJour)){
+            jaugeSommeil.addToValue(-1);
+        }
+        localStorage.setItem("jaugeSommeil", String(jaugeSommeil.valeur))
+    })
 
-const jobSommeil = new Cron('*/40 * * * * *', () => {
-    if(boolJour || (boolTel && !boolJour)){
-        jaugeSommeil.addToValue(-1);
-    }
-    localStorage.setItem("jaugeSommeil", String(jaugeSommeil.valeur))
-})
+    const jobDodo = new Cron('*/10 * * * * *', () => {
+        if(!boolJour && !boolTel){
+            jaugeSommeil.addToValue(1);
+        }
+        localStorage.setItem("jaugeSommeil", String(jaugeSommeil.valeur))
+    })
 
-const jobDodo = new Cron('*/10 * * * * *', () => {
-    if(!boolJour && !boolTel){
-        jaugeSommeil.addToValue(1);
-    }
-    localStorage.setItem("jaugeSommeil", String(jaugeSommeil.valeur))
-})
-
-const jobHygieneMental = new Cron('*/60 * * * * *', () => {
-    if(boolGros) {
-        jaugeHygiene.addToValue(-2);
-    } else {
-        jaugeHygiene.addToValue(-1);
-    }
-
-    if(jaugeSommeil.valeur <= 4) {
-        jaugeMental.addToValue(-2)
-    } else {
-        jaugeMental.addToValue(-1)
-    }
-
-    //Mise à jour timer minutes
-    minutes ++
-    localStorage.setItem("minutesTama", String(minutes))
-
-    localStorage.setItem("jaugeHygiene", String(jaugeHygiene.valeur));
-    localStorage.setItem("jaugeMental", String(jaugeMental.valeur));
-})
-
-const jobHP = new Cron('*/20 * * * * *', () => {
-    if(boolConnerie || boolMalade){
-        if(boolConnerie && boolMalade){
-            jaugeVie.addToValue(-2);
+    const jobHygieneMental = new Cron('*/60 * * * * *', () => {
+        if(boolGros) {
+            jaugeHygiene.addToValue(-2);
         } else {
-            jaugeVie.addToValue(-1);
+            jaugeHygiene.addToValue(-1);
         }
-    }
-    localStorage.setItem("jaugeVie", String(jaugeVie.valeur))
-})
 
-const jobConditionsSpéciales = new Cron('*/20 * * * * *', () => {
-    let roueDeLaChance : number = getRandomInt(1, 10);
-    if(jaugeHygiene.valeur <= 4) {
-        if(roueDeLaChance <= 5) {
-            boolMalade = true;
-        } 
-    } else if(boolGros) {
-        if(roueDeLaChance == 1) {
-            boolMalade == true;
+        if(jaugeSommeil.valeur <= 4) {
+            jaugeMental.addToValue(-2)
+        } else {
+            jaugeMental.addToValue(-1)
         }
-    } else {
-        if(roueDeLaChance == 1) {
-            if(getRandomInt(0, 1) == 0) {
-                boolMalade = true
+
+        //Mise à jour timer minutes
+        minutes ++
+        localStorage.setItem("minutesTama", String(minutes))
+
+        localStorage.setItem("jaugeHygiene", String(jaugeHygiene.valeur));
+        localStorage.setItem("jaugeMental", String(jaugeMental.valeur));
+    })
+
+    const jobHP = new Cron('*/20 * * * * *', () => {
+        if(boolConnerie || boolMalade){
+            if(boolConnerie && boolMalade){
+                jaugeVie.addToValue(-2);
             } else {
-                boolConnerie = true
+                jaugeVie.addToValue(-1);
             }
         }
-    }
-    localStorage.setItem("boolMalade", String(boolMalade));
-    localStorage.setItem("boolGros", String(boolGros));
-})
+        localStorage.setItem("jaugeVie", String(jaugeVie.valeur))
+    })
 
-const jobGros = new Cron('*/1 * * * * *', () => {
-    if(jaugeFaim.valeur <= 10 && boolGros) {
-        boolGros = false;
-    }
+    const jobConditionsSpéciales = new Cron('*/20 * * * * *', () => {
+        let roueDeLaChance : number = getRandomInt(1, 10);
+        if(jaugeHygiene.valeur <= 4) {
+            if(roueDeLaChance <= 5) {
+                boolMalade = true;
+            } 
+        } else if(boolGros) {
+            if(roueDeLaChance == 1) {
+                boolMalade == true;
+            }
+        } else {
+            if(roueDeLaChance == 1) {
+                if(getRandomInt(0, 1) == 0) {
+                    boolMalade = true
+                } else {
+                    boolConnerie = true
+                }
+            }
+        }
+        localStorage.setItem("boolMalade", String(boolMalade));
+        localStorage.setItem("boolGros", String(boolGros));
+    })
 
-    //Mise à jour timer secondes
-    secondes ++
-    localStorage.setItem("secondesTama", String(secondes))
+    const jobGros = new Cron('*/1 * * * * *', () => {
+        if(jaugeFaim.valeur <= 10 && boolGros) {
+            boolGros = false;
+        }
 
-    localStorage.setItem("boolGros", String(boolGros));
+        //Mise à jour timer secondes
+        secondes ++
+        localStorage.setItem("secondesTama", String(secondes))
 
-    if(jaugeFaim.valeur == 0){
-        boolMort = true
-    } else if(jaugeHygiene.valeur == 0) {
-        boolMort = true
-    } else if(jaugeMental.valeur == 0) {
-        boolMort = true
-    } else if(jaugeSommeil.valeur == 0) {
-        boolMort = true
-    } else if(jaugeVie.valeur == 0) {
-        boolMort = true
-    }
-})
+        localStorage.setItem("boolGros", String(boolGros));
 
-const jobTel = new Cron('*/5 * * * * *', () => {
-    if(boolTel){
-        jaugeMental.addToValue(1)
-    }
-    localStorage.setItem("jaugeMental", String(jaugeMental.valeur));
-})
+        if(jaugeFaim.valeur == 0){
+            boolMort = true
+        } else if(jaugeHygiene.valeur == 0) {
+            boolMort = true
+        } else if(jaugeMental.valeur == 0) {
+            boolMort = true
+        } else if(jaugeSommeil.valeur == 0) {
+            boolMort = true
+        } else if(jaugeVie.valeur == 0) {
+            boolMort = true
+        }
+    })
 
+    const jobTel = new Cron('*/5 * * * * *', () => {
+        if(boolTel){
+            jaugeMental.addToValue(1)
+        }
+        localStorage.setItem("jaugeMental", String(jaugeMental.valeur));
+    })
+}
 
 //Fonctions d'interaction avec le tamaghorrible
 //Interaction de nourriture
