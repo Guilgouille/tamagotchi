@@ -177,7 +177,7 @@ function gamestart() {
         // On met a jour tama pour son apparence
         mettreAJourApparenceTama();
     });
-    var jobGros = new Cron('*/1 * * * * *', function () {
+    var jobGros = new Cron('*/5 * * * * *', function () {
         if (jaugeFaim.valeur > 10) {
         boolGros = true;
         } else {
