@@ -115,12 +115,14 @@ function gamestart() {
     var jobFaim = new Cron('*/30 * * * * *', function () {
         jaugeFaim.addToValue(-1);
         localStorage.setItem("jaugeFaim", String(jaugeFaim.valeur));
+        console.log(jaugeFaim.valeur);
     });
     var jobSommeil = new Cron('*/40 * * * * *', function () {
         if (boolJour || (boolTel && !boolJour)) {
             jaugeSommeil.addToValue(-1);
         }
         localStorage.setItem("jaugeSommeil", String(jaugeSommeil.valeur));
+        console.log(jaugeSommeil.valeur)
     });
     var jobDodo = new Cron('*/10 * * * * *', function () {
         if (!boolJour && !boolTel) {
@@ -146,6 +148,8 @@ function gamestart() {
         localStorage.setItem("minutesTama", String(minutes));
         localStorage.setItem("jaugeHygiene", String(jaugeHygiene.valeur));
         localStorage.setItem("jaugeMental", String(jaugeMental.valeur));
+
+        console.log(jaugeHygiene.valeur + " " + jaugeMental.valeur)
     });
     var jobHP = new Cron('*/20 * * * * *', function () {
         if (boolConnerie || boolMalade) {
