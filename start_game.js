@@ -87,18 +87,18 @@ else {
 //Booléen indiquant s'il fait jour
 var boolJour;
 if (localStorage.getItem("boolJour") == null) {
-    boolJour = false;
+    boolJour = true;
 }
 else {
     boolJour = localStorage.getItem("boolJour") === "true";
 }
 //Booléen indiquant si la créature fait des bêtises
-var boolConnerie;
-if (localStorage.getItem("boolConnerie") == null) {
-    boolConnerie = false;
+var boolBetise;
+if (localStorage.getItem("boolBetise") == null) {
+    boolBetise = false;
 }
 else {
-    boolConnerie = localStorage.getItem("boolConnerie") === "true";
+    boolBetise = localStorage.getItem("boolBetise") === "true";
 }
 //Booléen indiquand si la créature est en surpoid
 var boolGros;
@@ -150,8 +150,8 @@ function gamestart() {
         mettreAJourApparenceTama();
     });
     var jobHP = new Cron('*/20 * * * * *', function () {
-        if (boolConnerie || boolMalade) {
-            if (boolConnerie && boolMalade) {
+        if (boolBetise || boolMalade) {
+            if (boolBetise && boolMalade) {
                 jaugeVie.addToValue(-2);
             }
             else {
@@ -170,10 +170,10 @@ function gamestart() {
         !boolGros &&
         !boolMalade
     ) {
-        boolConnerie = true;
+        boolBetise = true;
     }
 
-        localStorage.setItem("boolConnerie", String(boolConnerie));
+        localStorage.setItem("boolBetise", String(boolBetise));
         // On met a jour tama pour son apparence
         mettreAJourApparenceTama();
     });
@@ -276,9 +276,9 @@ function donnerDoliprane() {
     mettreAJourBarreVie();
 }
 function donnerMendale() {
-    boolConnerie = false;
+    boolBetise = false;
     jaugeVie.addToValue(-1);
-    localStorage.setItem("boolConnerie", String(boolConnerie));
+    localStorage.setItem("boolBetise", String(boolBetise));
     localStorage.setItem("jaugeVie", String(jaugeVie.valeur));
     mettreAJourBarreVie();
 }
@@ -706,7 +706,7 @@ function mettreAJourApparenceTama() {
     }
 
     // Bêtise
-    if (boolConnerie) {
+    if (boolBetise) {
         changerAnimationTama("Betise");
         return;
     }

@@ -14,7 +14,6 @@ var Jauge = /** @class */ (function () {
     };
     return Jauge;
 }());
-export { Jauge };
 
 // Cas particulier de la jauge de faim
 
@@ -42,19 +41,4 @@ var JaugeFaim = /** @class */ (function () {
 
 }());
 
-export { JaugeFaim };
-
-
-// Cas particulier de la jauge de vie
-
-var JaugeHP = /** @class */ (function () {
-    function JaugeHP(nom, valeur) {
-        this.nom = nom;
-        this.valeur = valeur;
-    }
-    JaugeHP.prototype.addToValue = function (num) {
-        this.valeur += num;
-    };
-    return JaugeHP;
-}());
-export { JaugeHP };
+export { JaugeFaim, Jauge };
