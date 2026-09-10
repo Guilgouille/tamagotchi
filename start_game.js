@@ -162,22 +162,26 @@ function gamestart() {
         mettreAJourBarreVie();
     });
     var jobConditionsSpéciales = new Cron('*/30 * * * * *', function () {
-           var roueDeLaChance = getRandomInt(1, 10);
-
-    if (
-        roueDeLaChance === 1 &&
-        jaugeHygiene.valeur > 4 &&
-        !boolGros &&
-        !boolMalade
-    ) {
-        boolBetise = true;
-    }
+        var roueDeLaChance = getRandomInt(1, 10);
+        
+        if(jaugeHygiene.valeur <= 4 && roueDeLaChance <= 5) {
+            boolMalade = true
+        } else if(boolGros && roueDeLaChance == 1){
+            boolMalade = true
+        } else if(roueDeLaChance == 1) {
+            if(getRandomInt(0, 1) == 0){
+                boolBetise = true
+            } else {
+                boolMalade = true
+            }
+        }
 
         localStorage.setItem("boolBetise", String(boolBetise));
+        localStorage.setItem("boolMalade", String(boolMalade));
         // On met a jour tama pour son apparence
         mettreAJourApparenceTama();
     });
-    var jobGros = new Cron('*/1 * * * * *', function () {
+    var jobGros = new Cron('*/5 * * * * *', function () {
         if (jaugeFaim.valeur > 10) {
         boolGros = true;
         } else {
@@ -196,6 +200,7 @@ function gamestart() {
             jaugeSommeil.valeur <= 0 ||
             jaugeVie.valeur <= 0
         ) {
+            jaugeVie.valeur = 0;
             boolMort = true;
             changerAnimationTama("Death");
         }
