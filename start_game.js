@@ -320,7 +320,7 @@ demarrerJeu();
 
 var tama = document.getElementById("tama");
 var inventory = document.getElementById("inventory");
-
+let animationActionEnCours = false;
 
 // liste des classes css des animations de tama (si j'ai rien oublier comme un con)
 var animationsTama = [
@@ -351,10 +351,11 @@ var animationsTama = [
 
 // Change l'animation actuelle
 function changerAnimationTama(nouvelleClasse) {
-
     animationsTama.forEach(function (classe) {
         tama.classList.remove(classe);
     });
+
+    void tama.offsetWidth; // merci claude
 
     tama.classList.add(nouvelleClasse);
 }
@@ -532,13 +533,17 @@ function laverTama() {
     mettreAJourApparenceTama();
 }
 
+let timeoutMandale = null;
+
 function frapperTama() {
+    animationActionEnCours = true;
 
     changerAnimationTama("Mandale");
-
     donnerMendale();
 
-    setTimeout(function () {
+    clearTimeout(timeoutMandale);
+    timeoutMandale = setTimeout(function () {
+        animationActionEnCours = false;
         mettreAJourApparenceTama();
     }, 1300);
 }
@@ -568,7 +573,7 @@ function utiliserTelephone() {
 function faireDormir() {
 
     // inversion des couleurs
-    document.body.classList.add("sleep-mode");
+    //document.body.classList.add("sleep-mode");
 
     // animation de sleepy sleep
     changerAnimationTama("sleepIdle");
@@ -686,6 +691,9 @@ inventory.addEventListener("click", function (event) {
 
 function mettreAJourApparenceTama() {
 
+    if (animationActionEnCours) {
+        return;
+    }
     // Téléphone
     if (boolTel) {
         if (boolGros) {
