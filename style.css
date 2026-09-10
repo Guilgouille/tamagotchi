@@ -15,9 +15,26 @@ body{
   background-color: white;
 }
 
+#name-modal::backdrop {
+    backdrop-filter: blur(4px);
+}
+
+#death-modal {
+    font-size: 30px;
+    text-align: center;
+}
+
+#death-modal button {
+    font-size: 20px;
+}
+
+#death-modal::backdrop {
+    backdrop-filter: blur(4px);
+}
+
 .sleep-mode {
     filter: invert(1);
-    transition: filter 0.5s ease;
+    transition: filter 0.5s ease-in-out;
 }
 
 .food-item,
@@ -31,6 +48,22 @@ body{
 }
 
 @media (max-width: 600px) {
+
+  
+  #name-modal {
+    font-size: 30px;
+  }
+
+  #name-modal input {
+    font-size: 20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+
+  #name-modal button {
+    font-size: 20px;
+  }
+
   .timename {
     display: flex;
     flex-direction: row;
@@ -133,6 +166,22 @@ body{
 }
 
 @media (min-width: 600px) {
+
+  #name-modal {
+    font-size: 30px;
+  }
+
+  #name-modal input {
+    font-size: 20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+
+  #name-modal button {
+    font-size: 20px;
+    border: 2px;
+    border-style: solid;
+  }
   .timename {
     display: flex;
     flex-direction: row;

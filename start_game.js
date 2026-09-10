@@ -200,9 +200,9 @@ function gamestart() {
             jaugeSommeil.valeur <= 0 ||
             jaugeVie.valeur <= 0
         ) {
-            jaugeVie.valeur = 0;
-            boolMort = true;
-            changerAnimationTama("Death");
+            if (!boolMort) {
+                gererMortTama();
+            }
         }
     });
     var jobTel = new Cron('*/5 * * * * *', function () {
@@ -322,6 +322,30 @@ var tama = document.getElementById("tama");
 var inventory = document.getElementById("inventory");
 let animationActionEnCours = false;
 
+
+let timeoutMort = null;
+
+function gererMortTama() {
+
+    boolMort = true;
+    animationActionEnCours = true;
+
+    changerAnimationTama("Death");
+
+    clearTimeout(timeoutMort);
+    timeoutMort = setTimeout(function () {
+        var modalMort = document.getElementById("death-modal");
+        modalMort.showModal();
+    }, 1300);
+}
+
+function reinitialiserJeu() {
+    localStorage.clear();
+    location.reload();
+}
+
+document.getElementById("reset-button").addEventListener("click", reinitialiserJeu);
+
 // liste des classes css des animations de tama (si j'ai rien oublier comme un con)
 var animationsTama = [
     "Idle",
@@ -351,6 +375,11 @@ var animationsTama = [
 
 // Change l'animation actuelle
 function changerAnimationTama(nouvelleClasse) {
+
+    if (boolMort && nouvelleClasse !== "Death") {
+        return;
+    }
+
     animationsTama.forEach(function (classe) {
         tama.classList.remove(classe);
     });
@@ -573,7 +602,7 @@ function utiliserTelephone() {
 function faireDormir() {
 
     // inversion des couleurs
-    document.body.classList.add("sleep-mode");
+    document.documentElement.classList.add("sleep-mode");
     boolJour = false;
     localStorage.setItem("boolJour", String(boolJour));
     
@@ -582,7 +611,7 @@ function faireDormir() {
 }
 
 function seReveiller() {
-    document.body.classList.remove('sleep-mode');
+    document.documentElement.classList.remove("sleep-mode");
     boolJour = true;
     localStorage.setItem("boolJour", String(boolJour));
     
@@ -643,6 +672,10 @@ tama.addEventListener("drop", function (event) {
 
     event.preventDefault();
 
+    if (boolMort) {
+        return;
+    }
+
     var type = event.dataTransfer.getData("type");
 
     if (type === "food") {
@@ -663,6 +696,10 @@ tama.addEventListener("drop", function (event) {
 // cliques dans l'iventaire
 
 inventory.addEventListener("click", function (event) {
+
+    if (boolMort) {
+        return;
+    }
 
     var button = event.target.closest("button");
 
