@@ -11,6 +11,10 @@
   font-style: normal;
 }
 
+body{
+  background-color: white;
+}
+
 .sleep-mode {
     filter: invert(1);
     transition: filter 0.5s ease;

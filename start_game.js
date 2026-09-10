@@ -38,7 +38,7 @@ else {
 //Jauge de Faim
 var jaugeFaim;
 if (localStorage.getItem("jaugeFaim") == null) {
-    jaugeFaim = new JaugeFaim("Faim", 10);
+    jaugeFaim = new JaugeFaim("Faim", 7);
 }
 else {
     jaugeFaim = new JaugeFaim("Faim", Number(localStorage.getItem("jaugeFaim")));
@@ -87,7 +87,7 @@ else {
 //Booléen indiquant s'il fait jour
 var boolJour;
 if (localStorage.getItem("boolJour") == null) {
-    boolJour = true;
+boolJour = true;
 }
 else {
     boolJour = localStorage.getItem("boolJour") === "true";
@@ -181,7 +181,7 @@ function gamestart() {
         // On met a jour tama pour son apparence
         mettreAJourApparenceTama();
     });
-    var jobGros = new Cron('*/5 * * * * *', function () {
+    var jobGros = new Cron('*/1 * * * * *', function () {
         if (jaugeFaim.valeur > 10) {
         boolGros = true;
         } else {
@@ -573,11 +573,33 @@ function utiliserTelephone() {
 function faireDormir() {
 
     // inversion des couleurs
-    //document.body.classList.add("sleep-mode");
-
+    document.body.classList.add("sleep-mode");
+    boolJour = false;
+    localStorage.setItem("boolJour", String(boolJour));
+    
     // animation de sleepy sleep
-    changerAnimationTama("sleepIdle");
+    
 }
+
+function seReveiller() {
+    document.body.classList.remove('sleep-mode');
+    boolJour = true;
+    localStorage.setItem("boolJour", String(boolJour));
+    
+}
+
+function utiliserSommeil() {
+    if (!boolJour){
+
+        seReveiller();
+
+    } else {
+
+        faireDormir();
+
+    }
+}
+
 
 // quand on commence a bouger un item
 inventory.addEventListener("dragstart", function (event) {
@@ -681,7 +703,7 @@ inventory.addEventListener("click", function (event) {
 
 
     if (action === "sleep") {
-        faireDormir();
+        utiliserSommeil();
     }
 
 });
