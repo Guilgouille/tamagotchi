@@ -11,6 +11,28 @@
   font-style: normal;
 }
 
+.sleep-mode {
+    filter: invert(1);
+    transition: filter 0.5s ease;
+}
+
+#health-fill {
+    width: 100%;
+    height: 100%;
+    background-color: red;
+    transition: width 0.2s ease;
+}
+
+.food-item,
+[data-action="medicine"] {
+    cursor: grab;
+}
+
+.food-item:active,
+[data-action="medicine"]:active {
+    cursor: grabbing;
+}
+
 @media (max-width: 600px) {
   .timename {
     display: flex;
@@ -38,6 +60,7 @@
     height: 12px;
     background-color: black;
     width: 40%;
+    overflow: hidden;
   }
 
   .heart-icon {
@@ -257,7 +280,7 @@
 
 .tama.FatPhone {
   --frames: 31;
-  background-image: url("assets/Phone/fat-tama2-phone-31.png");
+  background-image: url("assets/Obese/fat-tama2-phone-31.png");
   animation: sprite-anim 3.1s steps(31) infinite;
 }
 
@@ -332,5 +355,5 @@
 .tama.Death {
   --frames: 21;
   background-image: url("assets/death-21.png");
-  animation: sprite-anim 2.1s steps(21) infinite;
+  animation: sprite-anim 2.1s steps(21) forwards;
 }

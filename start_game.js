@@ -1,5 +1,5 @@
 //Imports
-import { Jauge } from "./Jauge.js";
+import { Jauge, JaugeFaim } from "./Jauge.js";
 import { Cron } from "./croner/dist/croner.js";
 import { getRandomInt } from "./fonctions_pratiques.js";
 
@@ -38,10 +38,10 @@ else {
 //Jauge de Faim
 var jaugeFaim;
 if (localStorage.getItem("jaugeFaim") == null) {
-    jaugeFaim = new Jauge("Faim", 10);
+    jaugeFaim = new JaugeFaim("Faim", 10);
 }
 else {
-    jaugeFaim = new Jauge("Faim", Number(localStorage.getItem("jaugeFaim")));
+    jaugeFaim = new JaugeFaim("Faim", Number(localStorage.getItem("jaugeFaim")));
 }
 //Jauge de sommeil
 var jaugeSommeil;
@@ -117,7 +117,7 @@ function gamestart() {
         localStorage.setItem("jaugeFaim", String(jaugeFaim.valeur));
         console.log(jaugeFaim.valeur);
     });
-    var jobSommeil = new Cron('*/40 * * * * *', function () {
+    var jobSommeil = new Cron('*/45 * * * * *', function () {
         if (boolJour || (boolTel && !boolJour)) {
             jaugeSommeil.addToValue(-1);
         }
@@ -130,7 +130,7 @@ function gamestart() {
         }
         localStorage.setItem("jaugeSommeil", String(jaugeSommeil.valeur));
     });
-    var jobHygieneMental = new Cron('*/60 * * * * *', function () {
+    var jobHygieneMental = new Cron('*/50 * * * * *', function () {
         if (boolGros) {
             jaugeHygiene.addToValue(-2);
         }
@@ -144,12 +144,10 @@ function gamestart() {
             jaugeMental.addToValue(-1);
         }
         //Mise à jour timer minutes
-        minutes++;
-        localStorage.setItem("minutesTama", String(minutes));
         localStorage.setItem("jaugeHygiene", String(jaugeHygiene.valeur));
         localStorage.setItem("jaugeMental", String(jaugeMental.valeur));
-
-        console.log(jaugeHygiene.valeur + " " + jaugeMental.valeur)
+        // On met a jour tama pour son apparence
+        mettreAJourApparenceTama();
     });
     var jobHP = new Cron('*/20 * * * * *', function () {
         if (boolConnerie || boolMalade) {
@@ -161,54 +159,45 @@ function gamestart() {
             }
         }
         localStorage.setItem("jaugeVie", String(jaugeVie.valeur));
+        mettreAJourBarreVie();
     });
-    var jobConditionsSpéciales = new Cron('*/20 * * * * *', function () {
-        var roueDeLaChance = getRandomInt(1, 10);
-        if (jaugeHygiene.valeur <= 4) {
-            if (roueDeLaChance <= 5) {
-                boolMalade = true;
-            }
-        }
-        else if (boolGros) {
-            if (roueDeLaChance == 1) {
-                boolMalade == true;
-            }
-        }
-        else {
-            if (roueDeLaChance == 1) {
-                if (getRandomInt(0, 1) == 0) {
-                    boolMalade = true;
-                }
-                else {
-                    boolConnerie = true;
-                }
-            }
-        }
-        localStorage.setItem("boolMalade", String(boolMalade));
-        localStorage.setItem("boolGros", String(boolGros));
+    var jobConditionsSpéciales = new Cron('*/30 * * * * *', function () {
+           var roueDeLaChance = getRandomInt(1, 10);
+
+    if (
+        roueDeLaChance === 1 &&
+        jaugeHygiene.valeur > 4 &&
+        !boolGros &&
+        !boolMalade
+    ) {
+        boolConnerie = true;
+    }
+
+        localStorage.setItem("boolConnerie", String(boolConnerie));
+        // On met a jour tama pour son apparence
+        mettreAJourApparenceTama();
     });
     var jobGros = new Cron('*/1 * * * * *', function () {
-        if (jaugeFaim.valeur <= 10 && boolGros) {
-            boolGros = false;
+        if (jaugeFaim.valeur > 10) {
+        boolGros = true;
+        } else {
+        boolGros = false;
         }
         //Mise à jour timer secondes
         secondes++;
         localStorage.setItem("secondesTama", String(secondes));
         localStorage.setItem("boolGros", String(boolGros));
-        if (jaugeFaim.valeur == 0) {
+        // Pourquoi se faire chier a faire des else if ????
+        if (
+            jaugeFaim.valeur <= 0 ||
+            jaugeFaim.valeur >= 20 ||
+            jaugeHygiene.valeur <= 0 ||
+            jaugeMental.valeur <= 0 ||
+            jaugeSommeil.valeur <= 0 ||
+            jaugeVie.valeur <= 0
+        ) {
             boolMort = true;
-        }
-        else if (jaugeHygiene.valeur == 0) {
-            boolMort = true;
-        }
-        else if (jaugeMental.valeur == 0) {
-            boolMort = true;
-        }
-        else if (jaugeSommeil.valeur == 0) {
-            boolMort = true;
-        }
-        else if (jaugeVie.valeur == 0) {
-            boolMort = true;
+            changerAnimationTama("Death");
         }
     });
     var jobTel = new Cron('*/5 * * * * *', function () {
@@ -222,15 +211,15 @@ function gamestart() {
     var clock = document.getElementById("clock");
     var nameDisplay = document.getElementById("tama-display-name");
 
-    var secAffichees = secondes % 60;
-    var minAffichees = String(minutes).padStart(2, "0");
-    var secStr = String(secAffichees).padStart(2, "0");
+    var minAffichees = String(Math.floor(secondes / 60)).padStart(2, "0");
+    var secAffichees = String(secondes % 60).padStart(2, "0");
 
-    clock.textContent = minAffichees + ":" + secStr;
+    clock.textContent = minAffichees + ":" + secAffichees;
     nameDisplay.textContent = nomTamaghorrible;
     }
 
     setInterval(MiseAJourAffichage, 1000);
+    mettreAJourBarreVie();
 
 }
 //Fonctions d'interaction avec le tamaghorrible
@@ -242,6 +231,7 @@ function donnerSalade() {
     localStorage.setItem("jaugeFaim", String(jaugeFaim.valeur));
     localStorage.setItem("jaugeVie", String(jaugeVie.valeur));
     localStorage.setItem("jaugeMental", String(jaugeMental.valeur));
+    mettreAJourBarreVie();
 }
 function donnerFugu() {
     jaugeFaim.addToValue(4);
@@ -250,6 +240,7 @@ function donnerFugu() {
     }
     localStorage.setItem("jaugeFaim", String(jaugeFaim.valeur));
     localStorage.setItem("boolMalade", String(boolMalade));
+    mettreAJourBarreVie();
 }
 function donnerTacos() {
     jaugeFaim.addToValue(6);
@@ -258,6 +249,7 @@ function donnerTacos() {
     localStorage.setItem("jaugeFaim", String(jaugeFaim.valeur));
     localStorage.setItem("jaugeMental", String(jaugeMental.valeur));
     localStorage.setItem("jaugeHygiene", String(jaugeHygiene.valeur));
+    mettreAJourBarreVie();
 }
 //Interactions du téléphone
 function donnerTel() {
@@ -281,12 +273,14 @@ function donnerDoliprane() {
     localStorage.setItem("jaugeVie", String(jaugeVie.valeur));
     localStorage.setItem("jaugeMental", String(jaugeMental.valeur));
     localStorage.setItem("boolMalade", String(boolMalade));
+    mettreAJourBarreVie();
 }
 function donnerMendale() {
     boolConnerie = false;
     jaugeVie.addToValue(-1);
     localStorage.setItem("boolConnerie", String(boolConnerie));
     localStorage.setItem("jaugeVie", String(jaugeVie.valeur));
+    mettreAJourBarreVie();
 }
 //Demande le nom au joueur si pas encore défini sinon lance direct le jeu
 function demarrerJeu() {
@@ -312,3 +306,460 @@ function demarrerJeu() {
 }
 
 demarrerJeu();
+
+
+
+
+
+// GESTION DE TAMA
+
+var tama = document.getElementById("tama");
+var inventory = document.getElementById("inventory");
+
+
+// liste des classes css des animations de tama (si j'ai rien oublier comme un con)
+var animationsTama = [
+    "Idle",
+    "sleepIdle",
+    "SleepPhone",
+    "Sick",
+    "OnPhone",
+    "OnPhoneDirty",
+    "FatIdle",
+    "FatSick",
+    "FatEat",
+    "FatPhone",
+    "FatMouthOpen",
+    "FatMad",
+    "FatDirty",
+    "FatDirtyMouthOpen",
+    "Mandale",
+    "Mad",
+    "Betise",
+    "DirtyIdle",
+    "EatDirty",
+    "MouthOpenDirty",
+    "Eat",
+    "MouthOpen",
+    "Death"
+];
+
+// Change l'animation actuelle
+function changerAnimationTama(nouvelleClasse) {
+
+    animationsTama.forEach(function (classe) {
+        tama.classList.remove(classe);
+    });
+
+    tama.classList.add(nouvelleClasse);
+}
+
+function attendrePuisActualiserApparence(duree) {
+    setTimeout(function () {
+        mettreAJourApparenceTama();
+    }, duree);
+}
+
+function mettreAJourBarreVie() {
+
+    var healthFill = document.getElementById("health-fill");
+
+    if (!healthFill) {
+        return;
+    }
+
+    var pourcentage = (jaugeVie.valeur / 10) * 100;
+
+    // Empêche la barre de sortir de son cadre
+    pourcentage = Math.max(0, Math.min(100, pourcentage));
+
+    healthFill.style.width = pourcentage + "%";
+}
+
+var menuPrincipal = inventory.innerHTML;
+// ouvre le menu de la bouffe
+function ouvrirMenuNourriture() {
+
+    inventory.innerHTML = `
+        <li class="border-inv">
+            <button type="button" data-action="food-back">
+                <img
+                    class="invpic"
+                    src="assets/back-arrow.png"
+                    width="64"
+                    height="64"
+                >
+            </button>
+        </li>
+
+        <li class="border-inv">
+            <button
+                type="button"
+                class="food-item"
+                data-food="salade"
+            >
+                <img
+                    class="invpic"
+                    src="assets/lettuce.png"
+                    width="96"
+                    height="96"
+                >
+            </button>
+        </li>
+
+        <li class="border-inv">
+            <button
+                type="button"
+                class="food-item"
+                data-food="fugu"
+            >
+                <img
+                    class="invpic"
+                    src="assets/ramen.png"
+                    width="64"
+                    height="64"
+                >
+            </button>
+        </li>
+
+        <li class="border-inv">
+            <button
+                type="button"
+                class="food-item"
+                data-food="tacos"
+            >
+                <img
+                    class="invpic"
+                    src="assets/tacos.png"
+                    width="64"
+                    height="64"
+                >
+            </button>
+        </li>
+    `;
+}
+
+
+// retour menu classique
+function fermerMenuNourriture() {
+    inventory.innerHTML = menuPrincipal;
+}
+
+function mangerTama(typeNourriture) {
+
+    // Animation bouche ouverte
+    if (boolGros && jaugeHygiene.valeur <= 4) {
+        changerAnimationTama("FatDirtyMouthOpen");
+    } else if (boolGros) {
+        changerAnimationTama("FatMouthOpen");
+    } else if (jaugeHygiene.valeur <= 4) {
+        changerAnimationTama("MouthOpenDirty");
+    } else {
+        changerAnimationTama("MouthOpen");
+    }
+
+    setTimeout(function () {
+
+        // Animation de nourriture
+        if (boolGros && jaugeHygiene.valeur <= 4) {
+            changerAnimationTama("EatDirty");
+        } else if (boolGros) {
+            changerAnimationTama("FatEat");
+        } else if (jaugeHygiene.valeur <= 4) {
+            changerAnimationTama("EatDirty");
+        } else {
+            changerAnimationTama("Eat");
+        }
+
+        setTimeout(function () {
+
+            // Effet de la nourriture
+            if (typeNourriture === "salade") {
+                donnerSalade();
+            }
+
+            if (typeNourriture === "fugu") {
+                donnerFugu();
+            }
+
+            if (typeNourriture === "tacos") {
+                donnerTacos();
+            }
+
+            // Retour vers le bon état
+            mettreAJourApparenceTama();
+
+        }, 600);
+
+    }, 500);
+}
+
+function donnerMedicament() {
+
+    if (boolGros && jaugeHygiene.valeur <= 4) {
+        changerAnimationTama("FatDirtyMouthOpen");
+    } else if (boolGros) {
+        changerAnimationTama("FatMouthOpen");
+    } else if (jaugeHygiene.valeur <= 4) {
+        changerAnimationTama("MouthOpenDirty");
+    } else {
+        changerAnimationTama("MouthOpen");
+    }
+
+    setTimeout(function () {
+
+        donnerDoliprane();
+
+        mettreAJourApparenceTama();
+
+    }, 500);
+}
+
+function laverTama() {
+
+    jaugeHygiene.addToValue(5); // A CHANGERRRRRRRR
+
+    localStorage.setItem(
+        "jaugeHygiene",
+        String(jaugeHygiene.valeur)
+    );
+
+    mettreAJourApparenceTama();
+}
+
+function frapperTama() {
+
+    changerAnimationTama("Mandale");
+
+    donnerMendale();
+
+    setTimeout(function () {
+        mettreAJourApparenceTama();
+    }, 1300);
+}
+
+function utiliserTelephone() {
+
+    if (!boolTel) {
+
+        donnerTel();
+
+        if (boolGros) {
+            changerAnimationTama("FatPhone");
+        } else if (jaugeHygiene.valeur <= 4) {
+            changerAnimationTama("OnPhoneDirty");
+        } else {
+            changerAnimationTama("OnPhone");
+        }
+
+    } else {
+
+        prendreTel();
+
+        mettreAJourApparenceTama();
+    }
+}
+
+function faireDormir() {
+
+    // inversion des couleurs
+    document.body.classList.add("sleep-mode");
+
+    // animation de sleepy sleep
+    changerAnimationTama("sleepIdle");
+}
+
+// quand on commence a bouger un item
+inventory.addEventListener("dragstart", function (event) {
+
+    var element = event.target.closest("[data-food], [data-action='medicine']");
+
+    if (!element) {
+        return;
+    }
+
+    if (element.dataset.food) {
+
+        event.dataTransfer.setData(
+            "type",
+            "food"
+        );
+
+        event.dataTransfer.setData(
+            "food",
+            element.dataset.food
+        );
+
+    } else {
+
+        event.dataTransfer.setData(
+            "type",
+            "medicine"
+        );
+    }
+});
+
+
+// autorise el drop sur tama
+tama.addEventListener("dragover", function (event) {
+    event.preventDefault();
+});
+
+
+// quand on drop un truc sur tama
+tama.addEventListener("drop", function (event) {
+
+    event.preventDefault();
+
+    var type = event.dataTransfer.getData("type");
+
+    if (type === "food") {
+
+        var food = event.dataTransfer.getData("food");
+
+        mangerTama(food);
+
+    }
+
+    if (type === "medicine") {
+
+        donnerMedicament();
+
+    }
+});
+
+// cliques dans l'iventaire
+
+inventory.addEventListener("click", function (event) {
+
+    var button = event.target.closest("button");
+
+    if (!button) {
+        return;
+    }
+
+    if (button.dataset.food) {
+        mangerTama(button.dataset.food);
+        return;
+    }
+
+    var action = button.dataset.action;
+
+    if (action === "food") {
+        ouvrirMenuNourriture();
+    }
+
+    if (action === "food-back") {
+        fermerMenuNourriture();
+    }
+
+    if (action === "medicine") {
+        donnerMedicament();
+    }
+
+    if (action === "wash") {
+        laverTama();
+    }
+
+    if (action === "hit") {
+        frapperTama();
+    }
+
+    if (action === "phone") {
+        utiliserTelephone();
+    }
+
+
+    if (action === "sleep") {
+        faireDormir();
+    }
+
+});
+
+
+// Apparence de tama la team (aider moi pitié)
+
+function mettreAJourApparenceTama() {
+
+    // Téléphone
+    if (boolTel) {
+        if (boolGros) {
+            changerAnimationTama("FatPhone");
+        } else if (jaugeHygiene.valeur <= 4) {
+            changerAnimationTama("OnPhoneDirty");
+        } else {
+            changerAnimationTama("OnPhone");
+        }
+        return;
+    }
+
+    // Obèse + sale
+    if (boolGros && jaugeHygiene.valeur <= 4) {
+        changerAnimationTama("FatDirty");
+        return;
+    }
+
+    // Sale
+    if (jaugeHygiene.valeur <= 4) {
+        changerAnimationTama("DirtyIdle");
+        return;
+    }
+
+    // Bêtise
+    if (boolConnerie) {
+        changerAnimationTama("Betise");
+        return;
+    }
+
+    // Malade
+    if (boolMalade) {
+        if (boolGros) {
+            changerAnimationTama("FatSick");
+        } else {
+            changerAnimationTama("Sick");
+        }
+        return;
+    }
+
+    // Fatigué
+    if (jaugeSommeil.valeur <= 4) {
+        changerAnimationTama("sleepIdle");
+        return;
+    }
+
+    // Folie
+    if (jaugeMental.valeur <= 2) {
+        if (boolGros) {
+            changerAnimationTama("FatMad");
+        } else {
+            changerAnimationTama("Mad");
+        }
+        return;
+    }
+
+    // Obèse
+    if (boolGros) {
+        changerAnimationTama("FatIdle");
+        return;
+    }
+
+    // Normal
+    changerAnimationTama("Idle");
+}
+
+
+
+
+
+
+
+
+
+
+window.debugTama = {
+    vie: jaugeVie,
+    faim: jaugeFaim,
+    sommeil: jaugeSommeil,
+    hygiene: jaugeHygiene,
+    mental: jaugeMental
+};

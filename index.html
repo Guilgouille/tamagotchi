@@ -6,64 +6,80 @@
     <title>Tamaghorrible</title>
     <link rel="icon" href="favicon.png">
     <link rel="stylesheet" href="style.css">
-</head>
-<body>
+  </head>
+  <body>
     <header class="info">
-        <section class="timename">
-            <time id="clock">22:32</time>
-            <p>-</p>
-            <p id="tama-display-name">Name</p>
-        </section>
-        <section class="health">
-            <div class="health-bar" min="0" max="10" value="10"></div>
-            <img class="heart-icon" src="assets/heart.png" alt="Points de vie">
-        </section>
+      <section class="timename">
+        <time id="clock">0:00</time>
+        <p>-</p>
+        <p id="tama-display-name">Name</p>
+      </section>
+    <section class="health">
+    <div class="health-bar">
+        <div id="health-fill"></div>
+    </div>
+
+    <img class="heart-icon" src="assets/heart.png">
+</section>
     </header>
 
     <main class="game">
-        <div class="tama Idle" role="img" aria-label="Tamagotchi qui dort"></div>
+      <div id="tama" class="tama Idle" role="img"></div>
 
-        <ul class="invbar">
-            <li class="border-inv">
-                <button type="button" data-action="feed">
-                    <img class="invpic" src="assets/Feed.png" alt="Nourrir" width="64" height="64">
-                </button>
-            </li>
-            <li class="border-inv">
-                <button type="button" data-action="medicine">
-                    <img class="invpic" src="assets/pills.png" alt="Médicaments" width="64" height="64">
-                </button>
-            </li>
-            <li class="border-inv">
-                <button type="button" data-action="wash">
-                    <img class="invpic" src="assets/soap-icon.png" alt="Laver" width="64" height="64">
-                </button>
-            </li>
-            <li class="border-inv">
-                <button type="button" data-action="pet">
-                    <img class="invpic" src="assets/hand.png" alt="Caresser" width="64" height="64">
-                </button>
-            </li>
-            <li class="border-inv">
-                <button type="button" data-action="call">
-                    <img class="invpic" src="assets/phone.png" alt="Appeler" width="64" height="64">
-                </button>
-            </li>
-            <li class="border-inv">
-                <button type="button" data-action="sleep">
-                    <img class="invpic" src="assets/moon.png" alt="Dormir" width="64" height="64">
-                </button>
-            </li>
-        </ul>
+      <ul class="invbar" id="inventory">
+    <li class="border-inv">
+        <button type="button" data-action="food">
+            <img class="invpic" src="assets/Feed.png" width="64" height="64">
+        </button>
+    </li>
+    <li class="border-inv">
+        <button type="button" data-action="medicine">
+            <img class="invpic" src="assets/pills.png" width="64" height="64">
+        </button>
+    </li>
+
+    <li class="border-inv">
+        <button type="button" data-action="wash">
+            <img class="invpic" src="assets/soap-icon.png" width="64" height="64">
+        </button>
+    </li>
+
+    <li class="border-inv">
+        <button type="button" data-action="hit">
+            <img class="invpic" src="assets/hand.png" width="64" height="64">
+        </button>
+    </li>
+
+    <li class="border-inv">
+        <button type="button" data-action="phone">
+            <img class="invpic" src="assets/phone.png" width="64" height="64">
+        </button>
+    </li>
+
+    <li class="border-inv">
+        <button type="button" data-action="sleep">
+            <img class="invpic" src="assets/moon.png" width="64" height="64">
+        </button>
+    </li>
+
+</ul>
+      </ul>
     </main>
 
     <dialog id="name-modal">
-    <form id="name-form">
-        <label for="tama-name">Nomme ton Atrocité</label> <br>
-        <input type="text" id="tama-name" maxlength="12" required autocomplete="off"> <br>
+      <form id="name-form">
+        <label for="tama-name">Nomme ton Atrocité</label> <br />
+        <input
+          type="text"
+          id="tama-name"
+          maxlength="12"
+          required
+          autocomplete="off"
+        />
+        <br />
         <button type="submit">Confirmer</button>
-    </form>
-</dialog>
+      </form>
+    </dialog>
     <script type="module" src="start_game.js"></script>
-</body>
+  </body>
 </html>
