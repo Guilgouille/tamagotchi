@@ -392,19 +392,19 @@ body{
 
 .tama.DirtyIdle {
   --frames: 7;
-  background-image: url("assets/Dirty/dirty-idle-7.png");
+  background-image: url("assets/dirty/dirty-idle-7.png");
   animation: sprite-anim 0.7s steps(7) infinite;
 }
 
 .tama.EatDirty {
   --frames: 6;
-  background-image: url("assets/Dirty/eat-dirty-6.png");
+  background-image: url("assets/dirty/eat-dirty-6.png");
   animation: sprite-anim 0.6s steps(6) infinite;
 }
 
 .tama.MouthOpenDirty {
   --frames: 1;
-  background-image: url("assets/Dirty/opened-mouth-dirty-1.png");
+  background-image: url("assets/dirty/opened-mouth-dirty-1.png");
 }
 
 .tama.Eat {
